@@ -1,0 +1,16 @@
+{
+  "name": "gtskkhelloworld",
+  "version": "1.0.0",
+  "description": "This is a helloworld test package.",
+  "main": "./hello.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "Hello",
+    "World"
+  ],
+  "author": "gtskk",
+  "license": "MIT"
+}

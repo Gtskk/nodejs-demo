@@ -14,3 +14,9 @@ http.createServer(function(req, res){
 	});
 }).listen(8080);
 console.log('服务器启动完成');
+
+
+process.on('message', function(msg){
+	msg.hello = msg.hello.toUpperCase();
+	process.send(msg);
+});

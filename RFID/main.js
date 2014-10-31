@@ -1,7 +1,12 @@
 var cp = require('child_process'),
 	http = require('http');
 
-var processlists = ['socket', 'monitor', 'scan', 'tagCheck'];
+var socket = require('./socket.js'),
+	/*monitor = require('./monitor.js'),
+	scan = require('./scan.js'),*/
+	tagCheck = require('./tagCheck.js');
+
+var processlists = [socket, 'monitor', 'scan', tagCheck];
 var processrun = [];
 
 //守护进程函数

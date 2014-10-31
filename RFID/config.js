@@ -1,4 +1,4 @@
-var defines = require('./define');
+var defines = require('./define.js');
 
 function Config(){
 	/*组数据

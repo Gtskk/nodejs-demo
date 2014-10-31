@@ -1,12 +1,13 @@
 var net = require('net'),
 	fs = require('fs');
-var service = require('./service');
+var service = require('./service.js'),
+	defines = require('./define.js');
 
 function main(argv){
 	// 读取配置文件
-	var config = JSON.parse(fs.readFileSync(argv[0], 'utf-8')),
-		host = config.host || '127.0.0.1',
-		port = config.port || 80;
+	var host = defines.SOCKET_HOST || '127.0.0.1',
+		port = defines.SOCKET_PORT || 80;
+	console.log(host);
 
 	// 建立socket服务端
 	var socket = net.createServer(function(conn){

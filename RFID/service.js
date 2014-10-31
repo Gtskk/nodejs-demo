@@ -1,3 +1,5 @@
+var redis = require('redis');
+
 // 处理逻辑数据
 function process(data){
 	try{
@@ -40,9 +42,15 @@ function getCommand(data) {
 
 // 获取标签列表
 function getTagsList(ct, groupId, state){
+	var r = redis.createClient();
+	r.on('error', function(err) {
+		console.log('Redis错误：'+err);
+	});
+
 	var states = [];
 	var datas = [];
 	var epcs = null;
+	var groupIds = r.smembers('GroupIDs');
 
 	if(state == 'onAndWork'){
 		states.push('on');

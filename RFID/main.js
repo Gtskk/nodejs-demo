@@ -2,11 +2,11 @@ var cp = require('child_process'),
 	http = require('http');
 
 var socket = require('./socket.js'),
-	/*monitor = require('./monitor.js'),
-	scan = require('./scan.js'),*/
+	monitor = require('./monitor.js'),
+	rfid = require('./lib/rfid.js'),
 	tagCheck = require('./tagCheck.js');
 
-var processlists = [socket, 'monitor', 'scan', tagCheck];
+var processlists = [socket, 'monitor', 'rfid', tagCheck];
 var processrun = [];
 
 //守护进程函数

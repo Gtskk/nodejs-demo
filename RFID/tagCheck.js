@@ -7,7 +7,7 @@ var funclists = [onLine, workLine, workToOnLine, workToOffLie, onToOffLine, offL
 function main(){
 	for (var i = 0; i < funclists.length; i++) {
 		setInterval(funclists[i], 1000);
-	};
+	}
 }
 
 // 在架处理方法
@@ -42,7 +42,5 @@ function onToOffLine(){
 function offLine(){
 	console.log('offLine');
 }
-
-console.log('iamgtskk');
 
 main();

@@ -1,4 +1,4 @@
-var defines = require('./define.js');
+var defines = require('./define.js').defines;
 
 function Config(){
 	/*组数据
@@ -164,7 +164,7 @@ function Config(){
 		{
 			id: 1,
 			readerId: 1,
-			readerIp: '172.16.13.226',
+			readerIp: '172.16.13.227',
 			desp: '',
 			nLevel1: 0,
 			nLevel2: 0,
@@ -307,7 +307,7 @@ function Config(){
 		for (var i = 0; i < this.groups.length; i++) {
 			var group = this.groups[i];
 			var groupId = group.groupId;
-			this.groupsInfo.groupId = [];
+			this.groupsInfo[groupId] = [];
 			for (var j = 0; j < this.ants.length; j++) {
 				var ant = this.ants[j];
 				if(group.groupId == ant.groupId){
@@ -318,7 +318,7 @@ function Config(){
 								antId: ant['antId'],
 								readerIp: reader['readerIp']
 							};
-							this.groupsInfo.groupId.push(info);
+							this.groupsInfo[groupId].push(info);
 						}
 					}
 				}
@@ -352,7 +352,7 @@ function Config(){
                 group.workline_stop_time = defines.TAG_WORKLINE_STOP_TIME
             }
 
-            this.groups[m] = group
+            this.groups[m] = group;
             m++;
 		}
 	}
@@ -374,8 +374,8 @@ function Config(){
 
 
 	// 获取读写器IP地址
-	this.getReaderIp = getReaderIp;
-	function getReaderIp () {
+	this.getReaderIps = getReaderIps;
+	function getReaderIps() {
 		var readerIps = [];
 		for (var i = 0; i < this.readers.length; i++) {
 			var reader = this.readers[i];
@@ -418,4 +418,5 @@ function Config(){
 
 
 var config = new Config();
+config.getGroupsInfo();
 exports.config = config;

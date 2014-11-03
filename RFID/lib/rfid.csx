@@ -1,4 +1,4 @@
-#r "JW.UHF.dll"
+#r "./lib/JW.UHF.dll"
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,8 @@ class Startup{
 
             if (result != Result.OK)
             {
-                return "不能打开读写器";
+                //return "不能打开读写器";
+                return false;
             }
             #endregion
 
@@ -62,7 +63,8 @@ class Startup{
             result = jwReader.RFID_Set_Config(rs);
             if (result != Result.OK)
             {
-                return "读写器设置失败";
+                //return "读写器设置失败";
+                return false;
             }
             #endregion
 

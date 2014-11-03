@@ -1,17 +1,17 @@
 var net = require('net'),
 	fs = require('fs');
 var service = require('./service.js'),
-	defines = require('./define.js');
+	defines = require('./define.js').defines;
 
-function main(argv){
+function main(){
 	// 读取配置文件
 	var host = defines.SOCKET_HOST || '127.0.0.1',
 		port = defines.SOCKET_PORT || 80;
-	console.log(host);
+	console.log(port);
 
 	// 建立socket服务端
 	var socket = net.createServer(function(conn){
-		console.log('Socket服务连接成功在%s:%d', host, port);
+		console.log('Socket服务创建成功在%s:%d', host, port);
 		conn.on('data', function(data){
 			console.log(data.toString());
 			var ret = service.process(data.toString());
@@ -24,4 +24,4 @@ function main(argv){
 	}).listen(port, host);
 }
 
-main(process.argv.slice(2));
+main();

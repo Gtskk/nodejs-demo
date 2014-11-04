@@ -164,7 +164,7 @@ function Config(){
 		{
 			id: 1,
 			readerId: 1,
-			readerIp: '172.16.13.227',
+			readerIp: '172.16.13.171',
 			desp: '',
 			nLevel1: 0,
 			nLevel2: 0,

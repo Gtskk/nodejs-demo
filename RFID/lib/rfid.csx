@@ -1,4 +1,4 @@
-#r "./lib/JW.UHF.dll"
+#r "JW.UHF.dll"
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ class Startup{
         return await Task.Run<object>(async () => {
             #region 连接模块
             Result result = Result.OK;
-            jwReader = new JWReader(input.host);
+            jwReader = new JWReader(input.host, input.port);
             result = jwReader.RFID_Open();//连接UHF模块
 
             if (result != Result.OK)
@@ -39,7 +39,7 @@ class Startup{
             RfidSetting rs = new RfidSetting();
             rs.AntennaPort_List = new List<AntennaPort>();
             AntennaPort ap = new AntennaPort();
-            ap.AntennaIndex = 0;//天线1
+            ap.AntennaIndex = 3;//天线1
             ap.Power = 27;//功率设为27
             rs.AntennaPort_List.Add(ap);
 

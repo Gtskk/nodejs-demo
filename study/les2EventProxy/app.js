@@ -7,6 +7,7 @@ var superagent = require('superagent'),
 var cnodeUrl = 'https://cnodejs.org';
 
 var app = express();
+app.listen(process.env.PORT || 5000);
 app.get('/', function(req, res){
 	superagent.get(cnodeUrl).end(function(err, sres){
 		if(err){
@@ -87,7 +88,7 @@ app.get('/', function(req, res){
 			});
 		});
 	});
-});
+});/*
 app.listen(3000, function(){
 	console.log('监听在3000端口');
-});
+});*/

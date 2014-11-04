@@ -10,5 +10,14 @@
     "RFID"
   ],
   "author": "gtskk",
-  "license": "MIT"
+  "license": "MIT",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "dependencies": {
+    "edge-cs": "^0.2.7",
+    "redis": "^0.12.1"
+  },
+  "devDependencies": {}
 }

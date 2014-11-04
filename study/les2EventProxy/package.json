@@ -1,0 +1,20 @@
+{
+  "name": "les2EventProxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "EventProxy"
+  ],
+  "author": "Gtskk",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "eventproxy": "^0.3.1",
+    "express": "^4.10.1",
+    "superagent": "^0.20.0"
+  }
+}

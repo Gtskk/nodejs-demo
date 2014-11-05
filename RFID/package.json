@@ -16,6 +16,7 @@
     "test": "tests"
   },
   "dependencies": {
+    "edge": "^0.9.3",
     "edge-cs": "^0.2.7",
     "redis": "^0.12.1"
   },

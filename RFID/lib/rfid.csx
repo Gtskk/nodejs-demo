@@ -1,5 +1,3 @@
-#r "JW.UHF.dll"
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,60 +20,72 @@ class Startup{
     /// 入口函数
     /// </summary>
     public async Task<object> Invoke(dynamic input){
-        return await Task.Run<object>(async () => {
-            #region 连接模块
-            Result result = Result.OK;
-            jwReader = new JWReader(input.host, input.port);
-            result = jwReader.RFID_Open();//连接UHF模块
+        return new{
+            initConnect = (Func<object, Task<object>>)(
+                async (amount) => {
+                    return initConnect(amount);
+                }
+            )
+        };
+    }
 
-            if (result != Result.OK)
-            {
-                //return "不能打开读写器";
-                return false;
-            }
-            #endregion
+    /// <summary>
+    /// 初始化读写器连接
+    /// </summary>
+    private JWReader initConnect(dynamic input){
+        #region 连接模块
+        Result result = Result.OK;
+        jwReader = new JWReader(input.host, input.port);
+        result = jwReader.RFID_Open();//连接UHF模块
 
-            #region 配置模块
-            RfidSetting rs = new RfidSetting();
-            rs.AntennaPort_List = new List<AntennaPort>();
-            AntennaPort ap = new AntennaPort();
-            ap.AntennaIndex = 3;//天线1
-            ap.Power = 27;//功率设为27
-            rs.AntennaPort_List.Add(ap);
+        if (result != Result.OK)
+        {
+            //return "不能打开读写器";
+            return null;
+        }
+        #endregion
+        return jwReader;
+    }
 
-            rs.GPIO_Config = null;
-            rs.Inventory_Time = 5000;
+    /// <summary>
+    /// 配置读写器
+    /// </summary>
+    private bool setReader(int antIndex, int power){
+        #region 配置模块
+        Result result = Result.OK;
+        RfidSetting rs = new RfidSetting();
+        rs.AntennaPort_List = new List<AntennaPort>();
+        AntennaPort ap = new AntennaPort();
+        ap.AntennaIndex = antIndex;//天线Index
+        ap.Power = power;//功率
+        rs.AntennaPort_List.Add(ap);
 
-            rs.Region_List = RegionList.CCC;
+        rs.GPIO_Config = null;
+        rs.Inventory_Time = 5000;
 
-            rs.RSSI_Filter = new RSSIFilter();
-            rs.RSSI_Filter.Enable = true;
-            rs.RSSI_Filter.RSSIValue = (float)-70;
+        rs.Region_List = RegionList.CCC;
 
-            rs.Speed_Mode = SpeedMode.SPEED_FASTEST;
+        rs.RSSI_Filter = new RSSIFilter();
+        rs.RSSI_Filter.Enable = true;
+        rs.RSSI_Filter.RSSIValue = (float)-70;
+
+        rs.Speed_Mode = SpeedMode.SPEED_FASTEST;
 
 
-            rs.Tag_Group = new TagGroup();
-            rs.Tag_Group.SessionTarget = SessionTarget.A;
-            rs.Tag_Group.SearchMode = SearchMode.DUAL_TARGET;
-            rs.Tag_Group.Session = Session.S0;
+        rs.Tag_Group = new TagGroup();
+        rs.Tag_Group.SessionTarget = SessionTarget.A;
+        rs.Tag_Group.SearchMode = SearchMode.DUAL_TARGET;
+        rs.Tag_Group.Session = Session.S0;
 
-            result = jwReader.RFID_Set_Config(rs);
-            if (result != Result.OK)
-            {
-                //return "读写器设置失败";
-                return false;
-            }
-            #endregion
+        result = jwReader.RFID_Set_Config(rs);
+        if (result != Result.OK)
+        {
+            //return "读写器设置失败";
+            return false;
+        }
+        #endregion
 
-            startInventory();
-
-            // simulate long running operation
-            //await Task.Delay(5000);
-
-            return this.tagList;
-
-        });
+        return true;
     }
 
 

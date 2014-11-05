@@ -1,6 +1,8 @@
 var edge = require('edge'), 
 	path = require('path'),
-	redis = require('redis');
+	redis = require('redis'),
+	events = require('events'),
+	util = require('util');
 
 var config = require('../config.js').config,
 	defines = require('../define.js').defines;
@@ -8,32 +10,95 @@ var config = require('../config.js').config,
 var r = redis.createClient();
 var ips = config.getReaderIps();
 
-var params = {
-	host: 'COM3',
-	port: '12345'
+function RfidNodejs() {
+	events.EventEmitter.call(this);
+	this.edge = {};
+	this.edge.open = edge.func({
+		source: __dirname + path.sep + 'NodeRfid.cs',
+	    typeName: 'NodeRfid.Startup',
+	    methodName: 'Open',
+	    references: [path.join(__dirname, 'JW.UHF.dll')]
+	});
+	this.edge.close = edge.func({
+		source: __dirname + path.sep + 'NodeRfid.cs',
+	    typeName: 'NodeRfid.Startup',
+	    methodName: 'Close',
+	    references: [path.join(__dirname, 'JW.UHF.dll')]
+	});
+}
+
+util.inherits(RfidNodejs, events.EventEmitter);
+
+function cloneObj(oldObj) { //复制对象方法
+	if (typeof(oldObj) != 'object') return oldObj;
+	if (oldObj == null) return oldObj;
+	var newObj = new Object();
+	for (var i in oldObj){
+		if(i == 'antInfos'){
+			newObj[i] = oldObj[i];
+		}else{
+			newObj[i] = cloneObj(oldObj[i]);
+		}
+	}
+	return newObj;
+}
+
+RfidNodejs.prototype.open = function(param) {
+	var temp = cloneObj(param); //调用复制对象方法
+	var two = {
+		logCallback: this.logCallback.bind(this),
+		dataCallback: this.dataCallback.bind(this)
+	};
+	for(var i = 0; i < 2; i++) {
+		for(var j in two){
+			temp[j] = two[j];
+		}	
+	}
+	console.log(temp);
+	return this.edge.open(temp, true);
 };
-var rfid = edge.func({
-	source: path.join(__dirname, 'rfid.csx'),
-	references: [path.join(__dirname, 'JW.UHF.dll')]
-});
+
+RfidNodejs.prototype.close = function() {
+	return this.edge.close("", true);
+};
+
+RfidNodejs.prototype.logCallback = function(msg) {
+	console.log('[RfidNodejs]', msg);
+};
+
+RfidNodejs.prototype.dataCallback = function(input, callback) {
+	this.emit('dataGet', input);
+};
+
+// module.exports = RfidNodejs;
+
+
 
 function main() {
 	for (var i = 0; i < ips.length; i++) {
 		var param = {
 			host: ips[i],
-			port: 9761
+			port: 9761,
+			antInfos: [
+				{
+					antIndex: 3,
+					antPower: 27
+				}
+			]
 		};
-		console.log(param);
-		rfid(param, function(err, result){
-			if(err) throw err;
-		    // 将读取到的信息保存到内存数据库中
-		    if(result){
-		    	console.log(result);
-		    	// r.set('DeviceID', JSON.stringify(result));
-		    }else{
-		    	console.log('读取读写器错误');
-		    }
-		});
+		var rfid = new RfidNodejs();
+
+		if(rfid.open(param)) {
+			console.log("rfid Opened");
+			rfid.on('dataGet', function(datas){
+				console.log(datas);
+			});
+			//close the kinect after 5 seconds
+			/*setTimeout(function(){
+				rfid.close();
+				console.log("rfid Closed");
+			}, 5000);*/
+		}
 	}
 }
 

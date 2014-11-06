@@ -77,7 +77,8 @@ RfidNodejs.prototype.dataCallback = function(input, callback) {
 function main() {
 	for (var i = 0; i < ips.length; i++) {
 		var param = {
-			host: ips[i],
+			// host: ips[i],
+			host: 'COM3',
 			port: 9761,
 			antInfos: [
 				{
@@ -98,6 +99,8 @@ function main() {
 				rfid.close();
 				console.log("rfid Closed");
 			}, 5000);*/
+		}else{
+			console.log('连接读写器错误');
 		}
 	}
 }

@@ -14,6 +14,7 @@ namespace NodeRfid
         private object lockObj = new object();//线程同步锁
         private Queue<Tag> inventoryTagQueue = new Queue<Tag>();//盘点到Tag队列列表
         Dictionary<string, object> tagList = new Dictionary<string, object>();//Tag列表
+        Dictionary<string, object> goneList = new Dictionary<string, object>();//Tag列表
         UInt64 actual_read_count = 0;//实际读取数量
         private bool stopInventoryFlag = false;//是否停止盘点标志
 
@@ -66,7 +67,8 @@ namespace NodeRfid
         {
             #region 连接模块
             Result result = Result.OK;
-            this.jwReader = new JWReader(input.host, input.port);
+            //this.jwReader = new JWReader(input.host, input.port);
+            this.jwReader = new JWReader(input.host);
             result = jwReader.RFID_Open();//连接UHF模块
 
             if (result != Result.OK)
@@ -209,6 +211,11 @@ namespace NodeRfid
             {
                 Tag packet = inventoryTagQueue.Dequeue();
                 String epc = packet.EPC;
+
+                if(this.goneList.ContainsKey(epc)){
+                    this.goneList.Remove(epc);
+                }
+                
                 if (this.tagList.ContainsKey(epc))
                 {
                     IDictionary<string, object> currentTag = (IDictionary<string, object>)this.tagList[epc];
@@ -230,13 +237,10 @@ namespace NodeRfid
 
             }//while循环
 
-            lock(lockObj)
+            /*if (!stopInventoryFlag)
             {
-                if (!stopInventoryFlag)
-                {
-                    this.dataCallback(this.tagList);
-                }
-            }
+                this.dataCallback(this.tagList);
+            }*/
         }
 
         /// <summary>
@@ -249,14 +253,25 @@ namespace NodeRfid
                 foreach(KeyValuePair<string, object> tag in this.tagList)
                 {
                     IDictionary<string, object> val = (IDictionary<string, object>)tag.Value;
-                    lock(lockObj){
-                        if (UtilD.DateDiffMillSecond(DateTime.Now, (DateTime)val["time"]) > 500)
+                    if (UtilD.DateDiffMillSecond(DateTime.Now, (DateTime)val["time"]) > 500)
+                    {
+                        if (this.goneList.ContainsKey(tag.Key))
                         {
-                            this.tagList.Remove(tag.Key);
+                            this.goneList[tag.Key] = tag.Value;
+                        }
+                        else
+                        {
+                            this.goneList.Add(tag.Key, tag.Value);
                         }
                     }
                 }
                 Thread.Sleep(100);
+
+                if (!stopInventoryFlag)
+                {
+                    this.dataCallback(this.goneList);
+                }
+
             }
         }
 

@@ -7,7 +7,6 @@ function main(){
 	// 读取配置文件
 	var host = defines.SOCKET_HOST || '127.0.0.1',
 		port = defines.SOCKET_PORT || 80;
-	console.log(port);
 
 	// 建立socket服务端
 	var socket = net.createServer(function(conn){

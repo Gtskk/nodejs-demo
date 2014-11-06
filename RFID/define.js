@@ -5,7 +5,7 @@
  var path = require('path'),
  	fs = require('fs');
 
-function Vars(){
+function Defines(){
 	// 常量定义
     this.IDF_CLIENT_CODE_SUCCESS = 100  // 连接正常
     this.IDF_CLIENT_CODE_ANTENNA_EXCEPTION = 101  // 天线异常
@@ -49,7 +49,7 @@ function Vars(){
     }
 }
 
-var defines = new Vars();
+var defines = new Defines();
 defines.loadConfig();
 
 exports.defines = defines;

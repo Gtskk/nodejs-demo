@@ -54,7 +54,6 @@ RfidNodejs.prototype.open = function(param) {
 			temp[j] = two[j];
 		}	
 	}
-	console.log(temp);
 	return this.edge.open(temp, true);
 };
 
@@ -70,39 +69,39 @@ RfidNodejs.prototype.dataCallback = function(input, callback) {
 	this.emit('dataGet', input);
 };
 
-// module.exports = RfidNodejs;
+module.exports = RfidNodejs;
 
+if(require.main == module){
+	function main() {
+		for (var i = 0; i < ips.length; i++) {
+			var param = {
+				// host: ips[i],
+				host: 'COM3',
+				port: 9761,
+				antInfos: [
+					{
+						antIndex: 3,
+						antPower: 27
+					}
+				]
+			};
+			var rfid = new RfidNodejs();
 
-
-function main() {
-	for (var i = 0; i < ips.length; i++) {
-		var param = {
-			// host: ips[i],
-			host: 'COM3',
-			port: 9761,
-			antInfos: [
-				{
-					antIndex: 3,
-					antPower: 27
-				}
-			]
-		};
-		var rfid = new RfidNodejs();
-
-		if(rfid.open(param)) {
-			console.log("rfid Opened");
-			rfid.on('dataGet', function(datas){
-				console.log(datas);
-			});
-			//close the kinect after 5 seconds
-			/*setTimeout(function(){
-				rfid.close();
-				console.log("rfid Closed");
-			}, 5000);*/
-		}else{
-			console.log('连接读写器错误');
+			if(rfid.open(param)) {
+				console.log("rfid Opened");
+				rfid.on('dataGet', function(datas){
+					console.log(datas);
+				});
+				//close the kinect after 5 seconds
+				/*setTimeout(function(){
+					rfid.close();
+					console.log("rfid Closed");
+				}, 5000);*/
+			}else{
+				console.log('连接读写器错误');
+			}
 		}
 	}
-}
 
-main();
+	main();
+}

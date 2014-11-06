@@ -4,16 +4,20 @@
   "description": "RFID package",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha"
   },
   "keywords": [
     "RFID"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gtskk/nodejs-demo/tree/master/RFID"
+  },
   "author": "gtskk",
   "license": "MIT",
   "directories": {
     "doc": "docs",
-    "test": "tests"
+    "test": "test"
   },
   "dependencies": {
     "edge": "^0.9.3",
@@ -22,5 +26,8 @@
     "redis": "^0.12.1",
     "util": "^0.10.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "should": "^4.1.0"
+  }
 }

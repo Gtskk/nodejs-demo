@@ -2,27 +2,22 @@ var cp = require('child_process'),
 	http = require('http');
 
 var socket = require('./socket.js'),
-	monitor = require('./monitor.js'),
-	rfid = require('./lib/rfid.js'),
+	// monitor = require('./monitor.js'),
+	// rfid = require('./lib/rfid.js'),
 	tagCheck = require('./tagCheck.js');
 
-var processlists = [socket, 'monitor', 'rfid', tagCheck];
+var processlists = [socket, tagCheck];
 var processrun = [];
 
 //守护进程函数
-function spawn(service, config){
-	var child;
-	if (config != undefined) {
-		child = cp.spawn('node', [service, config]);
-	}else{
-		child = cp.spawn('node', [service]);
-	}
+function spawn(service){
+	var child = cp.spawn('node', [service]);
 
 	processrun.push(child);
 
 	child.on('exit', function(code){
 		if(code != 0){
-			spawn(service, config);
+			spawn(service);
 		}
 	});
 }
@@ -30,11 +25,7 @@ function spawn(service, config){
 // 程序主函数
 function main(argv){
 	for (var i = 0; i < processlists.length; i++) {
-		if(processlists[i] == 'socket'){
-			spawn(processlists[i], argv[0]);
-		}else{
-			spawn(processlists[i]);
-		}
+		spawn(processlists[i]);
 	}
 
 	process.on('SIGTERM', function(){

@@ -164,7 +164,7 @@ function Config(){
 		{
 			id: 1,
 			readerId: 1,
-			readerIp: '172.16.13.171',
+			readerIp: '172.16.13.174',
 			desp: '',
 			nLevel1: 0,
 			nLevel2: 0,
@@ -364,7 +364,7 @@ function Config(){
 		if(id != undefined){
 			for (var i = 0; i < this.groups.length; i++) {
 				var group = this.groups[i];
-				if (int(group.groupId) == int(id)) {
+				if (parseInt(group.groupId) == parseInt(id)) {
 					return group;
 				}
 			}

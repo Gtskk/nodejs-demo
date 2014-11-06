@@ -1,12 +1,12 @@
 var redis = require('redis');
+var config = require('./config.js').config;
 
 // 处理逻辑数据
 function process(data){
 	try{
 		var params = getCommand(data);
-		console.log(params);
 		if(params.commandType == 'getTagsList'){
-			return 'iamrock, this is a test';
+			return getTagsList(params.commandType, params.groupId, params.state);
 		}
 	}catch(err){
 		console.log('错误：%s', err.message);
@@ -44,30 +44,34 @@ function getCommand(data) {
 function getTagsList(ct, groupId, state){
 	var r = redis.createClient();
 	r.on('error', function(err) {
-		console.log('Redis错误：'+err);
+		console.error('Redis错误：'+err);
 	});
-
+	
 	var states = [];
 	var datas = [];
 	var epcs = null;
-	var groupIds = r.smembers('GroupIDs');
-
+	var groupConfig = config.getGroupsConfig(groupId);
+	
 	if(state == 'onAndWork'){
 		states.push('on');
 		states.push('work');
 	}else{
-		states.push('state');
+		states.push(state);
 	}
 
 	for (var i = 0; i < states.length; i++) {
-		epcs = null;
+		epcs = r.hget(groupId, state);
+
 		if(epcs == null)
 			continue;
+		epcs = JSON.parse(epcs);
 
-		for(var j in epcs.items()){
+		for(var tag in epcs){
 			// 抓取信息
 
-			console.log('groupID:%s ------- %s', groupID, epc['tagEPC']);
+			console.log('groupId:%s ------- %s----%s', groupId, tag.data.EPC, tag.time);
+
+			datas.push(tag.data.EPC);
 		}
 	}
 

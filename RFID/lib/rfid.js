@@ -4,14 +4,18 @@ var edge = require('edge'),
 	events = require('events'),
 	util = require('util');
 
-var config = require('../config.js').config,
-	defines = require('../define.js').defines;
+var config = require('../config.js').config;
+var ips = config.getReaderIps();
 
 var r = redis.createClient();
-var ips = config.getReaderIps();
+
 
 function RfidNodejs() {
 	events.EventEmitter.call(this);
+
+	// 去除warning: possible EventEmitter memory leak detected. 11 listeners added.警告
+	this.setMaxListeners(0);
+
 	this.edge = {};
 	this.edge.open = edge.func({
 		source: __dirname + path.sep + 'NodeRfid.cs',
@@ -75,8 +79,7 @@ if(require.main == module){
 	function main() {
 		for (var i = 0; i < ips.length; i++) {
 			var param = {
-				// host: ips[i],
-				host: 'COM3',
+				host: ips[i],
 				port: 9761,
 				antInfos: [
 					{

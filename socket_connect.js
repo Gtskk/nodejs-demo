@@ -9,12 +9,13 @@ var command = {
 
 var client = net.connect({
 	host: '127.0.0.1',
-	port: 8080
+	port: 12345
 }, function(){
-	client.write(JSON.stringify(command));
+	setInterval(function(){
+		client.write(JSON.stringify(command));
+	}, 1000);
 });
 
 client.on('data', function(data){
 	console.log(data.toString());
-	client.end();
 });

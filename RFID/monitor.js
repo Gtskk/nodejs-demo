@@ -9,11 +9,11 @@ var ips = config.getReaderIps();
 
 // 主函数
 function main () {
-	for (var i = 0; i < ips.length; i++) {
-		setInterval(function(){
+	setInterval(function(){
+		for (var i = 0; i < ips.length; i++) {
 			checkStates(ips[i]);
-		}, 1000);
-	}
+		};
+	}, 1000);
 }
 
 // 不断检查读写器的状态

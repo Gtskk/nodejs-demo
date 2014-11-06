@@ -67,8 +67,7 @@ namespace NodeRfid
         {
             #region 连接模块
             Result result = Result.OK;
-            //this.jwReader = new JWReader(input.host, input.port);
-            this.jwReader = new JWReader(input.host);
+            this.jwReader = new JWReader(input.host, input.port);
             result = jwReader.RFID_Open();//连接UHF模块
 
             if (result != Result.OK)
@@ -215,7 +214,7 @@ namespace NodeRfid
                 if(this.goneList.ContainsKey(epc)){
                     this.goneList.Remove(epc);
                 }
-                
+
                 if (this.tagList.ContainsKey(epc))
                 {
                     IDictionary<string, object> currentTag = (IDictionary<string, object>)this.tagList[epc];
@@ -253,7 +252,7 @@ namespace NodeRfid
                 foreach(KeyValuePair<string, object> tag in this.tagList)
                 {
                     IDictionary<string, object> val = (IDictionary<string, object>)tag.Value;
-                    if (UtilD.DateDiffMillSecond(DateTime.Now, (DateTime)val["time"]) > 500)
+                    if (UtilD.DateDiffMillSecond(DateTime.Now, (DateTime)val["time"]) > 1500)
                     {
                         if (this.goneList.ContainsKey(tag.Key))
                         {

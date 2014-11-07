@@ -25,7 +25,7 @@ function main(){
 		if(rfid.open(param)) {
 
 			for (var j = 0; j < funclists.length; j++) {
-				funclists[j]();
+				funclists[j](ips[i]);
 			}
 			//close the kinect after 5 seconds
 			/*setTimeout(function(){
@@ -39,47 +39,73 @@ function main(){
 }
 
 // 在架处理方法
-function onLine(){
+function onLine(ip){
 	rfid.on('dataGet', function(returnDatas){
 		console.log(returnDatas);
 		for(var epc in returnDatas){
 			var antPort = returnDatas[epc].data.PORT;
-			var groupId = getGroupID(ips[i], antPort);
+			var groupId = getGroupId(ip, antPort);
 			if(groupId == null)
 				return;
 
-			r.hset(groupId, 'on', JSON.stringify(returnDatas[epc]));
+			var onEpcs = null;
+			r.hget(groupId, 'on', function(err, obj){
+				onEpcs = obj;
+			});
+			if(onEpcs)
+				onEpcs = JSON.parse(onEpcs);
+			else
+				onEpcs = {};
+			onEpcs[epc] = returnDatas[epc];
+
+			r.hset(groupId, 'on', JSON.stringify(onEpcs));
 		}
 	});
 }
 
-function workLine(){
-	// console.log('workLine');
-	var groupIds = r.smembers('GroupIDs');
-	for (var i = 0; i < groupIds.length; i++) {
-		var groupConfig = groupIds[i] // 获取组配置
-	};
+function workLine(ip){
+	rfid.on('workDataGet', function(returnDatas){
+		console.log(returnDatas);
+		for(var epc in returnDatas){
+			var antPort = returnDatas[epc].data.PORT;
+			var groupId = getGroupId(ip, antPort);
+			if(groupId == null)
+				return;
+
+			var onEpcs = null;
+			r.hget(groupId, 'on', function(err, obj){
+				onEpcs = obj;
+			});
+			if(onEpcs)
+				onEpcs = JSON.parse(onEpcs);
+			else
+				onEpcs = {};
+			onEpcs[epc] = returnDatas[epc];
+
+			r.hset(groupId, 'on', JSON.stringify(onEpcs));
+		}
+	});
 }
-function workToOnLine(){
+function workToOnLine(ip){
 	// console.log('workToOnLine');
 }
-function workToOffLie(){
+function workToOffLie(ip){
 	// console.log('workToOffLie');
 }
-function onToOffLine(){
+function onToOffLine(ip){
 	// console.log('onToOffLine');
 }
-function offLine(){
+function offLine(ip){
 	
 }
 
-function getGroupID(ip, ant){
+function getGroupId(ip, ant){
 	var groupsInfo = config.groupsInfo;
-	for (var i = 0; i < groupsInfo.length; i++) {
+	for (var i in groupsInfo) {
 		var groupInfo = groupsInfo[i];
 		for (var j = 0; j < groupInfo.length; j++) {
 			var group = groupInfo[j];
-			if(ip === group['readerIp'] && group['antId'] === ant)
+			if(ip === group.readerIp && group.antId === ant)
 				return i;
 		}
 	}

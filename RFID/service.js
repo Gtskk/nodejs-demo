@@ -1,6 +1,8 @@
 var redis = require('redis');
 var config = require('./config.js').config;
 
+var epcs = null;
+
 // 处理逻辑数据
 function process(data){
 	try{
@@ -49,7 +51,6 @@ function getTagsList(ct, groupId, state){
 	
 	var states = [];
 	var datas = [];
-	var epcs = null;
 	var groupConfig = config.getGroupsConfig(groupId);
 	
 	if(state == 'onAndWork'){
@@ -60,18 +61,22 @@ function getTagsList(ct, groupId, state){
 	}
 
 	for (var i = 0; i < states.length; i++) {
-		epcs = r.hget(groupId, state);
+		r.hget(groupId, state, function(err, obj){
+			if (err) {console.error(err);}
+			epcs = obj;
+		});
 
 		if(epcs == null)
 			continue;
 		epcs = JSON.parse(epcs);
+		console.log(epcs);
 
 		for(var tag in epcs){
 			// 抓取信息
+			var tagData = epcs[tag];
+			console.log('groupId:%s ------- %s----%s', groupId, tagData.data.EPC, tagData.time);
 
-			console.log('groupId:%s ------- %s----%s', groupId, tag.data.EPC, tag.time);
-
-			datas.push(tag.data.EPC);
+			datas.push(tagData.data.EPC);
 		}
 	}
 

@@ -7,9 +7,15 @@ var rfid = new RfidNodejs();
 var config = require('./config.js').config;
 var ips = config.getReaderIps();
 
-var funclists = [onLine, workLine, workToOnLine, workToOffLie, onToOffLine, offLine];
+var funclists = [online, workLine, workToOnline, workToOffline, onToOffline, offline];
 
 function main(){
+
+	// 清除redis内存数据库数据
+	r.flushall(function(didSuccess){
+		console.log('redis内存数据清理成功');
+	});
+
 	for (var i = 0; i < ips.length; i++) {
 		var param = {
 			host: ips[i],
@@ -39,64 +45,105 @@ function main(){
 }
 
 // 在架处理方法
-function onLine(ip){
+function online(ip){
+	var groupId;
 	rfid.on('dataGet', function(returnDatas){
-		console.log(returnDatas);
+		// console.log(returnDatas);
+		// Object.getOwnPropertyNames(returnDatas).length 
+		// 判断对象是否为空
+		var onEpcs = {};
 		for(var epc in returnDatas){
 			var antPort = returnDatas[epc].data.PORT;
-			var groupId = getGroupId(ip, antPort);
+			groupId = getGroupId(ip, antPort);
 			if(groupId == null)
 				return;
 
-			var onEpcs = null;
-			r.hget(groupId, 'on', function(err, obj){
-				onEpcs = obj;
-			});
-			if(onEpcs)
-				onEpcs = JSON.parse(onEpcs);
-			else
-				onEpcs = {};
 			onEpcs[epc] = returnDatas[epc];
 
-			r.hset(groupId, 'on', JSON.stringify(onEpcs));
 		}
+		r.hset(groupId, 'on', JSON.stringify(onEpcs), function(){});
 	});
 }
 
 function workLine(ip){
+	var groupId;
 	rfid.on('workDataGet', function(returnDatas){
-		console.log(returnDatas);
+		var onEpcs = {};
 		for(var epc in returnDatas){
 			var antPort = returnDatas[epc].data.PORT;
-			var groupId = getGroupId(ip, antPort);
+			groupId = getGroupId(ip, antPort);
 			if(groupId == null)
 				return;
 
-			var onEpcs = null;
-			r.hget(groupId, 'on', function(err, obj){
-				onEpcs = obj;
-			});
-			if(onEpcs)
-				onEpcs = JSON.parse(onEpcs);
-			else
-				onEpcs = {};
 			onEpcs[epc] = returnDatas[epc];
 
-			r.hset(groupId, 'on', JSON.stringify(onEpcs));
 		}
+		r.hset(groupId, 'work', JSON.stringify(onEpcs));
 	});
 }
-function workToOnLine(ip){
-	// console.log('workToOnLine');
+function workToOnline(ip){
+	var groupId;
+	rfid.on('workToOnLineDataGet', function(returnDatas){
+		var onEpcs = {};
+		for(var epc in returnDatas){
+			var antPort = returnDatas[epc].data.PORT;
+			groupId = getGroupId(ip, antPort);
+			if(groupId == null)
+				return;
+
+			onEpcs[epc] = returnDatas[epc];
+
+		}
+		r.hset(groupId, 'work', JSON.stringify(onEpcs));
+	});
 }
-function workToOffLie(ip){
-	// console.log('workToOffLie');
+function workToOffline(ip){
+	var groupId;
+	rfid.on('workToOfflineDataGet', function(returnDatas){
+		var onEpcs = {};
+		for(var epc in returnDatas){
+			var antPort = returnDatas[epc].data.PORT;
+			groupId = getGroupId(ip, antPort);
+			if(groupId == null)
+				return;
+
+			onEpcs[epc] = returnDatas[epc];
+
+		}
+		r.hset(groupId, 'work', JSON.stringify(onEpcs));
+	});
 }
-function onToOffLine(ip){
-	// console.log('onToOffLine');
+function onToOffline(ip){
+	var groupId;
+	rfid.on('onToOfflineDataGet', function(returnDatas){
+		var onEpcs = {};
+		for(var epc in returnDatas){
+			var antPort = returnDatas[epc].data.PORT;
+			groupId = getGroupId(ip, antPort);
+			if(groupId == null)
+				return;
+
+			onEpcs[epc] = returnDatas[epc];
+
+		}
+		r.hset(groupId, 'on', JSON.stringify(onEpcs));
+	});
 }
-function offLine(ip){
-	
+function offline(ip){
+	var groupId;
+	rfid.on('offlineDataGet', function(returnDatas){
+		var onEpcs = {};
+		for(var epc in returnDatas){
+			var antPort = returnDatas[epc].data.PORT;
+			groupId = getGroupId(ip, antPort);
+			if(groupId == null)
+				return;
+
+			onEpcs[epc] = returnDatas[epc];
+
+		}
+		r.hset(groupId, 'off', JSON.stringify(onEpcs));
+	});
 }
 
 function getGroupId(ip, ant){

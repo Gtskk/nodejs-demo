@@ -12,7 +12,6 @@ function main(){
 		console.log('Socket在%s:%d连接成功', host, port);
 		conn.on('data', function(data){
 			var ret = service.process(data.toString());
-			console.log(ret);
 			conn.write(ret);
 		});
 		conn.on('end', function(){

@@ -69,7 +69,6 @@ function getTagsList(ct, groupId, state){
 		if(epcs == null)
 			continue;
 		epcs = JSON.parse(epcs);
-		console.log(epcs);
 
 		for(var tag in epcs){
 			// 抓取信息

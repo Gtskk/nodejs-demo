@@ -169,6 +169,155 @@ Node.js事实上就是另外一种上下文，它允许在后端（脱离浏览�
 
 ### 分析HTTP服务器
 
+那么接下来，让我们分析一下这个HTTP服务器的构成。
+
+第一行请求（require）Node.js自带的 http 模块，并且把它赋值给 http 变量。
+
+接下来我们调用http模块提供的函数： createServer 。这个函数会返回一个对象，这个对象有一个叫做 listen 的方法，这个方法有一个数值参数，指定这个HTTP服务器监听的端口号。
+
+咱们暂时先不管 http.createServer 的括号里的那个函数定义。
+
+我们本来可以用这样的代码来启动服务器并侦听8888端口：
+	
+	var http = require("http");
+
+	var server = http.createServer();
+	server.listen(8888);
+
+这段代码只会启动一个侦听8888端口的服务器，它不做任何别的事情，甚至连请求都不会应答。
+
+最有趣（而且，如果你之前习惯使用一个更加保守的语言，比如PHP，它还很奇怪）的部分是 createSever() 的第一个参数，一个函数定义。
+
+实际上，这个函数定义是 createServer() 的第一个也是唯一一个参数。因为在JavaScript中，函数和其他变量一样都是可以被传递的。
+
+### 进行函数传递
+
+举例来说，你可以这样做：
+
+	function say(word) {
+	  	console.log(word);
+	}
+
+	function execute(someFunction, value) {
+	  	someFunction(value);
+	}
+
+	execute(say, "Hello");
+
+请仔细阅读这段代码！在这里，我们把 say 函数作为execute函数的第一个变量进行了传递。这里返回的不是 say 的返回值，而是 say 本身！
+
+这样一来， say 就变成了execute 中的本地变量 someFunction ，execute可以通过调用 someFunction() （带括号的形式）来使用 say 函数。
+
+当然，因为 say 有一个变量， execute 在调用 someFunction 时可以传递这样一个变量。
+
+我们可以，就像刚才那样，用它的名字把一个函数作为变量传递。但是我们不一定要绕这个“先定义，再传递”的圈子，我们可以直接在另一个函
+数的括号中定义和传递这个函数：
+
+	function execute(someFunction, value) {
+	  	someFunction(value);
+	}
+
+	execute(function(word){ console.log(word) }, "Hello");
+
+我们在 execute 接受第一个参数的地方直接定义了我们准备传递给 execute 的函数。
+
+用这种方式，我们甚至不用给这个函数起名字，这也是为什么它被叫做 匿名函数 。
+
+这是我们和我所认为的“进阶”JavaScript的第一次亲密接触，不过我们还是得循序渐进。现在，我们先接受这一点：在JavaScript中，一个函数
+可以作为另一个函数接收一个参数。我们可以先定义一个函数，然后传递，也可以在传递参数的地方直接定义函数。
+
+### 函数传递是如何让HTTP服务器工作的
+
+带着这些知识，我们再来看看我们简约而不简单的HTTP服务器：
+
+	var http = require("http");
+
+	http.createServer(function(request, response) {
+	  	response.writeHead(200, {"Content-Type": "text/plain"});
+	  	response.write("Hello World");
+	  	response.end();
+	}).listen(8888);
+
+
+现在它看上去应该清晰了很多：我们向 createServer 函数传递了一个匿名函数。
+
+用这样的代码也可以达到同样的目的：
+	
+	var http = require("http");
+
+	function onRequest(request, response) {
+	  	response.writeHead(200, {"Content-Type": "text/plain"});
+	  	response.write("Hello World");
+	  	response.end();
+	}
+
+	http.createServer(onRequest).listen(8888);
+
+也许现在我们该问这个问题了：我们为什么要用这种方式呢？
+
+### 基于事件驱动的回调
+
+这个问题可不好回答（至少对我来说），不过这是Node.js原生的工作方式。它是事件驱动的，这也是它为什么这么快的原因。
+
+你也许会想花点时间读一下*Felix Geisendörfer*的大
+作[Understanding node.js](http://debuggable.com/posts/understanding-node-js:4bd98440-45e4-4a9a-8ef7-0f7ecbdd56cb)，它
+介绍了一些背景知识。
+
+这一切都归结于“Node.js是事件驱动的”这一事实。好吧，其实我也不是特别确切的了解这句话的意思。不过我会试着解释，为什
+么它对我们用Node.js写网络应用（Web based application）是有意义的。
+
+当我们使用 http.createServer 方法的时候，我们当然不只是想要一个侦听某个端口的服务器，我们还想要它在服务器收到一个
+HTTP请求的时候做点什么。
+
+问题是，这是异步的：请求任何时候都可能到达，但是我们的服务器却跑在一个单进程中。
+
+写PHP应用的时候，我们一点也不为此担心：任何时候当有请求进入的时候，网页服务器（通常是Apache）就为这一请求新建一个进
+程，并且开始从头到尾执行相应的PHP脚本。
+
+那么在我们的Node.js程序中，当一个新的请求到达8888端口的时候，我们怎么控制流程呢？
+
+嗯，这就是Node.js/JavaScript的事件驱动设计能够真正帮上忙的地方了——虽然我们还得学一些新概念才能掌握它。让我们来看看这
+些概念是怎么应用在我们的服务器代码里的。
+
+我们创建了服务器，并且向创建它的方法传递了一个函数。无论何时我们的服务器收到一个请求，这个函数就会被调用。
+
+我们不知道这件事情什么时候会发生，但是我们现在有了一个处理请求的地方：它就是我们传递过去的那个函数。至于它是被预先定
+义的函数还是匿名函数，就无关紧要了。
+
+这个就是传说中的**回调**。我们给某个方法传递了一个函数，这个方法在有相应事件发生时调用这个函数来进行**回调**。
+
+至少对我来说，需要一些功夫才能弄懂它。你如果还是不太确定的话就再去读读Felix的博客文章。
+
+让我们再来琢磨琢磨这个新概念。我们怎么证明，在创建完服务器之后，即使没有HTTP请求进来、我们的回调函数也没有被调用的情
+况下，我们的代码还继续有效呢？我们试试这个：
+
+	var http = require("http");
+
+	function onRequest(request, response) {
+	  	console.log("Request received.");
+	  	response.writeHead(200, {"Content-Type": "text/plain"});
+	  	response.write("Hello World");
+	  	response.end();
+	}
+
+	http.createServer(onRequest).listen(8888);
+
+	console.log("Server has started.");
+
+> 注意：在 onRequest （我们的回调函数）触发的地方，我用`console.log`输出了一段文本。在HTTP服务器开始工作之后，也输出一
+段文本。
+
+当我们与往常一样，运行它`node server.js`时，它会马上在命令行上输出`Server has started.`。当我们向服务器
+发出请求（在浏览器访问[http://localhost:8888/](http://localhost:8888/) ），“Request received.”这条消息就会在命令行中出现。
+
+这就是事件驱动的异步服务器端JavaScript和它的回调啦！
+
+>（请注意，当我们在服务器访问网页时，我们的服务器可能会输出两次“Request received.”。那是因为大部分服务器都会在你访
+问[http://localhost:8888](http://localhost:8888) /时尝试读取 http://localhost:8888/favicon.ico )
+
+
+
+
 
 Linux系统下没有现成的安装程序可用，虽然一些发行版可以使用`apt-get`之类的方式安装，但不一定能安装到最新版。因此Linux系统下一般使用以下方式编译方式安装NodeJS。
 

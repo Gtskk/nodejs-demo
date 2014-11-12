@@ -205,11 +205,11 @@
 		var curfontsize = 12;
 		var content = document.getElementsByTagName('article');
 		function turnbig() {
-			content[0].style.fontSize = (++curfontsize) + 'px';
+			content[0].style.fontSize = (++curfontsize) + 'pt';
 		}
 		function turnsmall() {
 			if(curfontsize > 12){
-				content[0].style.fontSize = (--curfontsize) + 'px';
+				content[0].style.fontSize = (--curfontsize) + 'pt';
 			}else{
 				alert('已经很小了，注意爱护眼睛哦，亲^-^');
 			}

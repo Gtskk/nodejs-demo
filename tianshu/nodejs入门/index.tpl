@@ -41,7 +41,7 @@ position: fixed;
 top: 0;
 left: 0;
 bottom: 0;
-width: 240px;
+width: 260px;
 }
 
 nav .menubar {
@@ -169,6 +169,10 @@ font-size: 10pt;
 margin-top: 4em;
 }
 
+footer p{
+  text-align: right;
+}
+
 @media (max-width: 768px) {
 
 body {
@@ -243,7 +247,6 @@ display: none;
 </head>
 <body>
 <header>
-<a href="#8" class="banner">提供给NodeJS爱好者的一份工作机会</a>
 <x-markdown src="section/00_header.md" />
 </header>
 <nav>
@@ -254,26 +257,16 @@ display: none;
 <x-index />
 </nav>
 <article>
-<x-markdown src="section/01_getting_started.md" />
-<x-markdown src="section/02_code_management_and_deployment.md" />
-<x-markdown src="section/03_file.md" />
-<x-markdown src="section/04_network.md" />
-<x-markdown src="section/05_process.md" />
-<x-markdown src="section/06_async_programming.md" />
-<x-markdown src="section/07_example.md" />
-<x-markdown src="section/08_job.md" />
+<x-markdown src="section/01_about.md" />
+<x-markdown src="section/02_hello.md" />
+<x-markdown src="section/03_intro.md" />
+<x-markdown src="section/04_construct_module.md" />
+<x-markdown src="section/05_summary.md" />
 </article>
 <footer>
 <x-markdown src="section/99_footer.md" />
 </footer>
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-48219354-1', 'nqdeng.github.io');
-  ga('send', 'pageview');
 
   (function (nav) {
     var body = document.getElementsByTagName('body')[0];

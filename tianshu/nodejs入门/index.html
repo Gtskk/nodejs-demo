@@ -1,266 +1,238 @@
 <!doctype HTML>
 <html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-<title>Node入门</title>
-<style>
-body {
-color: #333;
-font-family: sans-serif;
-font-size: 12pt;
-line-height: 170%;
-padding: 0 30px 0 270px;
-}
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+		<title>Node入门</title>
+		<style>
+		body {
+		color: #333;
+		font-family: sans-serif;
+		font-size: 12pt;
+		line-height: 170%;
+		padding: 0 30px 0 270px;
+		}
+		header .banner {
+		margin: 0 0 1em 0;
+		}
+		header .banner, nav .banner {
+		color: #777;
+		font-size: 10pt;
+		font-weight: bold;
+		}
+		header h1 {
+		background: #0c3;
+		border-radius: 4px;
+		color: #fff;
+		font-size: 24pt;
+		margin: 0;
+		padding: 1.2em 0;
+		text-align: center;
+		}
+		nav {
+		font-size: 10pt;
+		overflow-x: hidden;
+		overflow-y: auto;
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 260px;
+		}
+		nav .menubar {
+		border-bottom: solid 1px #ccc;
+		display: none;
+		height: 48px;
+		line-height: 48px;
+		padding: 0 10px;
+		}
+		nav .button {
+		background: #777;
+		border: 1px solid #333;
+		color: #fff;
+		font-size: 10pt;
+		font-weight: bold;
+		padding: 8px;
+		border-radius: 4px;
+		}
+		nav ul {
+		padding: 0 0 0 10px;
+		}
+		nav ul a {
+		color: #333;
+		text-decoration: none;
+		}
+		nav ul a:hover {
+		text-decoration: underline;
+		}
+		nav li {
+		line-height: 180%;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		}
+		nav .level2 {
+		font-size: 11pt;
+		font-weight: bold;
+		}
+		nav .level3 {
+		padding-left: 1em;
+		}
+		nav .level3:before {
+		content: "» ";
+		}
+		nav .level4 {
+		padding-left: 2em;
+		}
+		nav .level4:before {
+		content: "› ";
+		}
+		article h2 {
+		border-bottom: dotted 1px #777;
+		font-size: 12pt;
+		line-height: 100%;
+		margin: 4em 0 1em 0;
+		padding: 0 0 0.3em 0;
+		}
+		article h3 {
+		font-size: 12pt;
+		line-height: 100%;
+		margin: 2em 0 1em 0;
+		padding: 0;
+		}
+		article h4 {
+		font-size: 12pt;
+		font-style:italic;
+		font-weight: normal;
+		line-height: 100%;
+		margin: 1.2em 0 1em 0;
+		padding: 0;
+		}
+		article p {
+		margin: 1em 0;
+		}
+		article p code {
+		background: #eee;
+		border: 1px solid #ccc;
+		}
+		article p strong {
+		color: #f00;
+		}
+		article pre {
+		background: #eee;
+		border-left: solid 2px #3c0;
+		font-size: 10pt;
+		margin: 1em 0;
+		padding: 0 0 0 1em;
+		overflow-x: auto;
+		overflow-y: padding;
+		}
+		article blockquote {
+		background: #fff;
+		border: dashed 1px #777;
+		border-left: solid 2px #777;
+		color: #000;
+		margin: 0;
+		padding: 0 0 0 1em;
+		}
+		article ul, article ol {
+		padding-left: 2em;
+		}
+		footer {
+		border-top: 1px solid #ccc;
+		font-size: 10pt;
+		margin-top: 4em;
+		}
+		footer p{
+		text-align: right;
+		}
+		@media (max-width: 768px) {
+		body {
+		padding: 0 10px 0 230px;
+		}
+		nav {
+		width: 230px;
+		}
+		}
+		@media (max-width: 480px) {
+		body {
+		padding: 64px 10px 0 10px;
+		}
+		header .banner {
+		display: none;
+		}
+		nav {
+		position: absolute;
+		width: 100%;
+		}
+		nav .menubar {
+		display: block;
+		}
+		nav .banner {
+		float: right;
+		}
+		nav ul {
+		background: #fff;
+		display: none;
+		font-size: 14pt;
+		margin: 0;
+		padding: 0 0 0 8px;
+		}
+		nav .level2 {
+		font-size: 16pt;
+		font-weight: bold;
+		}
+		nav li {
+		line-height: 240%;
+		}
+		.index nav ul {
+		display: block;
+		}
+		.index article {
+		display: none;
+		}
+		}
+		</style>
+		<script>
+		(function (tags) {
+		var i = 0, len = tags.length;
+		for (; i < len; ++i) {
+		document.createElement(tags[i]);
+		}
+		}([ 'header', 'nav', 'article', 'footer' ]));
 
-header .banner {
-margin: 0 0 1em 0;
-}
+		var curfontsize = 12;
+		var content = document.getElementsByTagName('article');
+		function turnbig() {
+			content[0].style.fontSize = (++curfontsize) + 'px';
+		}
+		function turnsmall() {
+			if(curfontsize > 12){
+				content[0].style.fontSize = (--curfontsize) + 'px';
+			}else{
+				alert('已经很小了，注意爱护眼睛哦，亲^-^');
+			}
+		}
+		</script>
+	</head>
+	<body>
+		<header>
+			<a href="javascript:void(0);" onclick="turnbig()">大字号</a>
+			<a href="javascript:void(0);" onclick="turnsmall()">小字号</a>
+			<h1 id="node-">Node 入门</h1>
 
-header .banner, nav .banner {
-color: #777;
-font-size: 10pt;
-font-weight: bold;
-}
-
-header h1 {
-background: #0c3;
-border-radius: 4px;
-color: #fff;
-font-size: 24pt;
-margin: 0;
-padding: 1.2em 0;
-text-align: center;
-}
-
-nav {
-font-size: 10pt;
-overflow-x: hidden;
-overflow-y: auto;
-position: fixed;
-top: 0;
-left: 0;
-bottom: 0;
-width: 260px;
-}
-
-nav .menubar {
-border-bottom: solid 1px #ccc;
-display: none;
-height: 48px;
-line-height: 48px;
-padding: 0 10px;
-}
-
-nav .button {
-background: #777;
-border: 1px solid #333;
-color: #fff;
-font-size: 10pt;
-font-weight: bold;
-padding: 8px;
-border-radius: 4px;
-}
-
-nav ul {
-padding: 0 0 0 10px;
-}
-
-nav ul a {
-color: #333;
-text-decoration: none;
-}
-
-nav ul a:hover {
-text-decoration: underline;
-}
-
-nav li {
-line-height: 180%;
-list-style: none;
-margin: 0;
-padding: 0;
-}
-
-nav .level2 {
-font-size: 11pt;
-font-weight: bold;
-}
-
-nav .level3 {
-padding-left: 1em;
-}
-
-nav .level3:before { 
-content: "» ";
-}
-
-nav .level4 {
-padding-left: 2em;
-}
-
-nav .level4:before {
-content: "› ";
-}
-
-article h2 {
-border-bottom: dotted 1px #777;
-font-size: 12pt;
-line-height: 100%;
-margin: 4em 0 1em 0;
-padding: 0 0 0.3em 0;
-}
-
-article h3 {
-font-size: 12pt;
-line-height: 100%;
-margin: 2em 0 1em 0;
-padding: 0;
-}
-
-article h4 {
-font-size: 12pt;
-font-style:italic;
-font-weight: normal;
-line-height: 100%;
-margin: 1.2em 0 1em 0;
-padding: 0;
-}
-
-article p {
-margin: 1em 0;
-}
-
-article p code {
-background: #eee;
-border: 1px solid #ccc;
-}
-
-article p strong {
-color: #f00;
-}
-
-article pre {
-background: #eee;
-border-left: solid 2px #3c0;
-font-size: 10pt;
-margin: 1em 0;
-padding: 0 0 0 1em;
-overflow-x: auto;
-overflow-y: padding;
-}
-
-article blockquote {
-background: #fff;
-border: dashed 1px #777;
-border-left: solid 2px #777;
-color: #000;
-margin: 0;
-padding: 0 0 0 1em;
-}
-
-article ul, article ol {
-padding-left: 2em;
-}
-
-footer {
-border-top: 1px solid #ccc;
-font-size: 10pt;
-margin-top: 4em;
-}
-
-footer p{
-  text-align: right;
-}
-
-@media (max-width: 768px) {
-
-body {
-padding: 0 10px 0 230px;
-}
-
-nav {
-width: 230px;
-}
-
-}
-
-@media (max-width: 480px) {
-
-body {
-padding: 64px 10px 0 10px;
-}
-
-header .banner {
-display: none;
-}
-
-nav {
-position: absolute;
-width: 100%;
-}
-
-nav .menubar {
-display: block;
-}
-
-nav .banner {
-float: right;
-}
-
-nav ul {
-background: #fff;
-display: none;
-font-size: 14pt;
-margin: 0;
-padding: 0 0 0 8px;
-}
-
-nav .level2 {
-font-size: 16pt;
-font-weight: bold;
-}
-
-nav li {
-line-height: 240%;
-}
-
-.index nav ul {
-display: block;
-}
-
-.index article {
-display: none;
-}
-
-}
-</style>
-<script>
-  (function (tags) {
-    var i = 0, len = tags.length;
-
-    for (; i < len; ++i) {
-        document.createElement(tags[i]);
-    }
-  }([ 'header', 'nav', 'article', 'footer' ]));
-</script>
-</head>
-<body>
-<header>
-<h1 id="node-">Node 入门</h1>
-
-</header>
-<nav>
-<div class="menubar">
-<a class="button">&#9776;&nbsp;索引</a>
-<a href="#8" class="banner">提供给NodeJS爱好者的一份工作机会</a>
-</div>
-<ul>
+		</header>
+		<nav>
+			<div class="menubar">
+				<a class="button">&#9776;&nbsp;索引</a>
+				<a href="#8" class="banner">提供给NodeJS爱好者的一份工作机会</a>
+			</div>
+			<ul>
 <li class="level2"><a href="#1">关于</a></li><li class="level3"><a href="#1.1">状态</a></li><li class="level3"><a href="#1.2">读者对象</a></li><li class="level3"><a href="#1.3">本书结构</a></li><li class="level2"><a href="#2">Javascript与Nodejs</a></li><li class="level3"><a href="#2.1">Javascript与你</a></li><li class="level3"><a href="#2.2">简短申明</a></li><li class="level3"><a href="#2.3">服务端Javascript</a></li><li class="level3"><a href="#2.4">&quot;Hello World&quot;</a></li><li class="level2"><a href="#3">一个完整的基于Node.js的web应用</a></li><li class="level3"><a href="#3.1">用例</a></li><li class="level3"><a href="#3.2">应用不同模块的分析</a></li><li class="level2"><a href="#4">构建应用的模块</a></li><li class="level3"><a href="#4.1">一个基础的HTTP服务器</a></li><li class="level3"><a href="#4.2">分析HTTP服务器</a></li><li class="level3"><a href="#4.3">进行函数传递</a></li><li class="level3"><a href="#4.4">函数传递是如何让HTTP服务器工作的</a></li><li class="level3"><a href="#4.5">基于事件驱动的回调</a></li><li class="level3"><a href="#4.6">服务器是如何处理请求的</a></li><li class="level3"><a href="#4.7">服务端的模块放在哪里</a></li><li class="level3"><a href="#4.8">如何来进行请求的<strong>路由</strong></a></li><li class="level3"><a href="#4.9">行为驱动执行</a></li><li class="level3"><a href="#4.10">路由给真正的请求处理程序</a></li><li class="level3"><a href="#4.11">让请求处理程序作出响应</a></li><li class="level4"><a href="#4.11.1">不好的实现方式</a></li><li class="level4"><a href="#4.11.2">阻塞与非阻塞</a></li><li class="level4"><a href="#4.11.3">以非阻塞操作进行请求响应</a></li><li class="level3"><a href="#4.12">更有用的场景</a></li><li class="level4"><a href="#4.12.1">处理POST请求</a></li><li class="level4"><a href="#4.12.2">处理文件上传</a></li><li class="level2"><a href="#5">总结与展望</a></li></ul>
 
-</nav>
-<article>
-<h2 id="1">关于</h2>
+		</nav>
+		<article>
+			<h2 id="1">关于</h2>
 <p>本书致力于教会你如何用Node.js来开发应用，过程中会传授你所有所需的“高级”JavaScript知识。本书绝不是一本“Hello World”的教程。</p>
 <h3 id="1.1">状态</h3>
 <p>你正在阅读的已经是本书的最终版。因此，只有当进行错误更正以及针对新版本Node.js的改动进行对应的修正时，才会进行更新。</p>
@@ -278,7 +250,7 @@ display: none;
 <p>可以确保的是，在这过程中，大家会学到JavaScript中一些高级的概念、如何使用它们以及为什么使用这些概念就可以实现而其他编程语言中同类的概念就无法实现。</p>
 <p>该应用所有的源代码都可以通过<a href="https://github.com/ManuelKiessling/NodeBeginnerBook/tree/master/code/application">本书Github代码仓库</a>.</p>
 
-<h2 id="2">Javascript与Nodejs</h2>
+			<h2 id="2">Javascript与Nodejs</h2>
 <h3 id="2.1">Javascript与你</h3>
 <p>抛开技术，我们先来聊聊你以及你和JavaScript的关系。本章的主要目的是想让你看看，对你而言是否有必要继续阅读后续章节的内容。</p>
 <p>如果你和我一样，那么你很早就开始利用HTML进行“开发”，正因如此，你接触到了这个叫JavaScript有趣的东西，而对于JavaScript，你只会基本的操作——为web页面添加交互。</p>
@@ -311,7 +283,7 @@ display: none;
 <p>正常的话，就会在终端输出<code>Hello World</code>。</p>
 <p>好吧，我承认这个应用是有点无趣，那么下面我们就来点“干货”。</p>
 
-<h2 id="3">一个完整的基于Node.js的web应用</h2>
+			<h2 id="3">一个完整的基于Node.js的web应用</h2>
 <h3 id="3.1">用例</h3>
 <p>我们来把目标设定得简单点，不过也要够实际才行：</p>
 <ul>
@@ -338,7 +310,7 @@ display: none;
 <p>听起来好像有一大堆活要做，但随后我们会逐渐意识到，对Node.js来说这并不是什么麻烦的事。</p>
 <p>现在我们就来开始实现之路，先从第一个部分--HTTP服务器着手。</p>
 
-<h2 id="4">构建应用的模块</h2>
+			<h2 id="4">构建应用的模块</h2>
 <h3 id="4.1">一个基础的HTTP服务器</h3>
 <p>当我准备开始写我的第一个“真正的”Node.js应用的时候，我不但不知道怎么写Node.js代码，也不知道怎么组织这些代码。 
 我应该把所有东西都放进一个文件里吗？网上有很多教程都会教你把所有的逻辑都放进一个用Node.js写的基础HTTP服务器里。但是如果我想加入更多的内容，同时还想保持代码的可读性呢？</p>
@@ -1443,7 +1415,7 @@ exports.upload = upload;
 exports.show = show;</code></pre>
 <p>好了，重启服务器，我们应用所有的功能就可以用了。选择一张本地图片，将其上传到服务器，然后浏览器就会显示该图片。</p>
 
-<h2 id="5">总结与展望</h2>
+			<h2 id="5">总结与展望</h2>
 <p>恭喜，我们的任务已经完成了！我们开发完了一个Node.js的web应用，应用虽小，但却“五脏俱全”。 期间，我们介绍了很多技术点：
 <code>服务端JavaScript</code>、<code>函数式编程</code>、<code>阻塞与非阻塞</code>、<code>回调</code>、<code>事件</code>、<code>内部和外部模块</code>等等。</p>
 <p>当然了，还有许多本书没有介绍到的： 如何操作数据库、如何进行单元测试、如何开发Node.js的外部模块以及一些简单的诸如如何获取
@@ -1456,26 +1428,24 @@ Node.js的资源，有什么问题都可以向社区寻求解答。 其中<a hre
 特别是对于<code>函数式编程</code>、<code>阻塞与非阻塞</code>、<code>回调</code>、<code>事件</code>的讲解浅显易懂，但又不失本意。</p>
 <h1 id="-">力荐  ^-^</h1>
 
-</article>
-<footer>
-<p>------- By<strong>哥特式KK</strong></p>
+		</article>
+		<footer>
+			<p>------- By<strong>哥特式KK</strong></p>
 <p><em>2014-11-12</em></p>
 
-</footer>
-<script>
-
-  (function (nav) {
-    var body = document.getElementsByTagName('body')[0];
-
-    nav.addEventListener &&
-    nav.addEventListener('click', function (e) {
-      if (e.target.className == 'button') {
-        body.className = !body.className ? 'index' : '';
-      } else {
-        body.className = '';
-      }
-    }, false);
-  }(document.getElementsByTagName('nav')[0]));
-</script>
-</body>
+		</footer>
+		<script>
+		(function (nav) {
+		var body = document.getElementsByTagName('body')[0];
+		nav.addEventListener &&
+		nav.addEventListener('click', function (e) {
+		if (e.target.className == 'button') {
+		body.className = !body.className ? 'index' : '';
+		} else {
+		body.className = '';
+		}
+		}, false);
+		}(document.getElementsByTagName('nav')[0]));
+		</script>
+	</body>
 </html>

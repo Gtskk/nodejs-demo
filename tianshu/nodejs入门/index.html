@@ -12,6 +12,7 @@
 		line-height: 170%;
 		padding: 0 30px 0 270px;
 		}
+		code{background:#eee;color:#f4645f;padding:0 5px;border-radius:3px}
 		header .banner {
 		margin: 0 0 1em 0;
 		}

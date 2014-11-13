@@ -1,3 +1,6 @@
 [submodule "nodeclub"]
 	path = nodeclub
 	url = git@github.com:Gtskk/nodeclub.git
+[submodule "noderce"]
+	path = noderce
+	url = git@github.com:Gtskk/noderce.git

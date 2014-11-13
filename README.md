@@ -8,7 +8,11 @@
 
 ### 2014-11-13
 
-添加doxmate文档生成器，里面readme有具体使用方法
+1. 添加doxmate文档生成器，里面readme有具体使用方法
+
+2. 添加cnodejs官网fork包，方便学习
+
+3. 添加[noderce](http://willerce.com/)源码，另添加自己的修改，使其完美运行。
 
 
 **哥特式KK**

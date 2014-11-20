@@ -19,5 +19,10 @@
 1. 给noderce项目添加log4js模块，增加调试功能
 2. 给noderce项目添加日志功能
 
+#### 2014-11-20
+
+1. 给noderce项目添加分类功能
+2. 修改noderce项目的日期插件（SimpleDatepicker）bug，讲起止年份改为2000-2015
+
 
 **哥特式KK**

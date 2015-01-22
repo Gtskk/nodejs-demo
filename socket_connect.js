@@ -1,14 +1,14 @@
 var net = require('net');
 
 var command = {
-	commandType: 'getTagsList',
-	key: '123456',
-	groupId: 8,
-	state: 'shelfOn'
+	CommandType: 'GetTagsList',
+	Key: '123456',
+	GroupID: 8,
+	State: 'shelfOn'
 };
 
 var client = net.connect({
-	host: '127.0.0.1',
+	host: '172.16.13.34',
 	port: 12345
 }, function(){
 	setInterval(function(){
